@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Git: Undoing | A Tech Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Git: UndoingIn the last instance of this series, how to add and commit the code using git. Here we move towards basic concepts, which will start to make ‘git’ sound useful as a tool.">
+<meta name="keywords" content="tech , linux , foss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git: Undoing">
+<meta property="og:url" content="https://harish1996.github.io/2018/04/21/Git-Undoing/index.html">
+<meta property="og:site_name" content="A Tech Blog">
+<meta property="og:description" content="Git: UndoingIn the last instance of this series, how to add and commit the code using git. Here we move towards basic concepts, which will start to make ‘git’ sound useful as a tool.">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-04-21T20:18:40.982Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git: Undoing">
+<meta name="twitter:description" content="Git: UndoingIn the last instance of this series, how to add and commit the code using git. Here we move towards basic concepts, which will start to make ‘git’ sound useful as a tool.">
+  
+    <link rel="alternate" href="/placeholder-blog/atom.xml" title="A Tech Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/placeholder-blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/placeholder-blog/" id="logo">A Tech Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/placeholder-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/placeholder-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/placeholder-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://harish1996.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Git-Undoing" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/placeholder-blog/2018/04/21/Git-Undoing/" class="article-date">
+  <time datetime="2018-04-21T16:23:00.000Z" itemprop="datePublished">2018-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git: Undoing
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Git-Undoing"><a href="#Git-Undoing" class="headerlink" title="Git: Undoing"></a>Git: Undoing</h1><p>In the last instance of this series, how to <strong>add</strong> and <strong>commit</strong> the code using git. Here we move towards basic concepts, which will start to make ‘git’ sound useful as a tool.</p>
+<a id="more"></a>
+<h2 id="Undoing-Changes"><a href="#Undoing-Changes" class="headerlink" title="Undoing Changes"></a>Undoing Changes</h2><h3 id="Stashing"><a href="#Stashing" class="headerlink" title="Stashing"></a>Stashing</h3><p><code>git stash</code> is the command which undoes the changes made after the previous commit . </p>
+<blockquote><p>Stashing is the process by which the dirty state of the working directory can be saved in a stack of unfinished changes , that can be reapplied .</p>
+</blockquote>
+<p>So if there are some unwanted changes in the working directory, that the user has applied after the last commit, the working directory is in an uncertain state. In this state , most operations cant be done because, git is unsure what to do with the unsaved/uncommited changes in the working directory. In many occasions, it may be required to remove the changes from the working directory , and is some other situations it may be required to transfer these changes in a seperate <em>branch</em>.</p>
+<p>In all these above cases, stashing will be your friend. Using <code>git stash</code> will remove all the current unsaved changes and store in a git stack.To discard those changes , <code>git stash drop</code> can be used.</p>
+<h2 id="Undoing-a-wrong-‘add’"><a href="#Undoing-a-wrong-‘add’" class="headerlink" title="Undoing a wrong ‘add’"></a>Undoing a wrong ‘add’</h2><p><code>git rm</code> is the command to remove files that are staged for a commit. </p>
+<p>Suppose if a commit requires all changes but from one particular file. In this situation , either we can add all the other individual files manually or we can just add all the changes in the repository and remove that particular change. This can be accomplished with the help of <code>git rm</code>.</p>
+<figure class="highlight bash"><figcaption><span>Removing files from index</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm --cached &lt;change to be removed &gt;</span><br></pre></td></tr></table></figure>
+<p><code>--cached</code> option mentions that <code>rm</code> operation is only meant to delete the file from the git’s <em>index</em> and not actually remove the file from the <em>working directory</em>.</p>
+<p>whereas<br><figure class="highlight bash"><figcaption><span>Removing from index and directory</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git rm &lt;file to be removed&gt;</span><br></pre></td></tr></table></figure></p>
+<p>will permanantly remove the files mentioned both <em>physically</em> and from the <em>index</em>. Removing from the index means one can never recover any changes related to that particular file.</p>
+<p><strong>NOTE : It must be noted that simply removing the file ( by using ‘rm’ ) , which was already added/staged , simply removes the file physically. But it resides in the index and can be recovered by checkout like operation.</strong></p>
+<p>A stellar example of where this can be useful is while dealing with accidentally staged binaries. Binaries usually change by a large even for a small change in the code which produces it. So when some binary is accidentally staged into the index , it takes up a huge amount of space inside the index. Simply deleting the file would not reduce the space already taken by the binary in the index. In these cases, git rm should be used to ensure removal of binary from both the directory and also from the index</p>
+<h2 id="Undoing-a-wrong-‘commit’"><a href="#Undoing-a-wrong-‘commit’" class="headerlink" title="Undoing a wrong ‘commit’"></a>Undoing a wrong ‘commit’</h2><p>This is by far the most used among the lot. Often in a project , it will be necessary to just undo a change introduced by a certain commit to test the code before the changes introduced by that particular commit.</p>
+<p>In those cases, two sub-tools in git can help. </p>
+<h3 id="git-reset"><a href="#git-reset" class="headerlink" title="git reset"></a>git reset</h3><figure class="highlight plain"><figcaption><span>Soft Resetting Commits</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git reset --soft  &lt;commit ID&gt;</span><br></pre></td></tr></table></figure>
+<p>is used to perform a <strong>soft-reset</strong> on the working tree. It removes the changes introduces by the commit from the index, but keeps all the changes in working directory. <em>( i.e. git forgets the changes , but actual changes are left  untouched )</em>.</p>
+<p>This can be useful whenever a commit is performed wrong . For example, in situations where unrelated files are added to a commit.</p>
+<figure class="highlight plain"><figcaption><span>Hard Resetting Commits</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">```git reset --hard &lt;commit ID&gt;</span><br></pre></td></tr></table></figure>
+<p>is another variant of the same command, where git removes the change both from the index and the actual directory. <em>( i.e. git throws the changes out the window and forgets about it ! )</em></p>
+<p>Precaution must be excercised before using this command, as all the changes brought in by that particular commit will be gone.</p>
+<h3 id="git-checkout"><a href="#git-checkout" class="headerlink" title="git checkout"></a>git checkout</h3><p><code>git checkout</code> is not a command for correcting wrongly done commits per se. But what git checkout does is, git temporarily keeps aside the changes brought in by the commit(s) , and undoes all the commits and gives the version of the working directory at the time of that particular commit. </p>
+<p>This command technically undoes changes done by a commit . But does not remove anything from the index . So git here, keeps the changes with it , but changes the actual files inside the directory . So whenever you want the original version , git searches for that version in its index and reproduces that version of the working directory.</p>
+<p><code>git checkout</code> can perform more than the above mentioned . We will see about these later in the section about Branching.</p>
+<p>Here , we saw how to remove accidentally or intentionally introduced code from the index and/or the working directory .In the next in the series , we will see about <strong>Branching in Git</strong>.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://harish1996.github.io/2018/04/21/Git-Undoing/" data-id="cjgkip80j0003hpc6o96bwwm9" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/placeholder-blog/2018/04/28/Git-Branching/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Git: Branching
+        
+      </div>
+    </a>
+  
+  
+    <a href="/placeholder-blog/2018/04/21/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/placeholder-blog/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/29/Git-Damage-Correction/">Git: Recalibrating</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/28/Git-Branching/">Git: Branching</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/21/Git-Undoing/">Git: Undoing</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/21/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/21/First/">First</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Harish Ganesan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/placeholder-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/placeholder-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/placeholder-blog/fancybox/jquery.fancybox.css">
+  <script src="/placeholder-blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/placeholder-blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
