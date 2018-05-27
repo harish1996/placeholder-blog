@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Git-Branching-3 | A Tech Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Git : Branching III : RebasingIn the previous blog, we saw about moving around branches and merging two branches. This time around we are going to explore a more ‘feared’ portion of git. Rebasing What">
+<meta name="keywords" content="tech , linux , foss">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Git-Branching-3">
+<meta property="og:url" content="https://harish1996.github.io/2018/05/27/Git-Branching-3/index.html">
+<meta property="og:site_name" content="A Tech Blog">
+<meta property="og:description" content="Git : Branching III : RebasingIn the previous blog, we saw about moving around branches and merging two branches. This time around we are going to explore a more ‘feared’ portion of git. Rebasing What">
+<meta property="og:locale" content="en">
+<meta property="og:updated_time" content="2018-05-27T19:03:47.724Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Git-Branching-3">
+<meta name="twitter:description" content="Git : Branching III : RebasingIn the previous blog, we saw about moving around branches and merging two branches. This time around we are going to explore a more ‘feared’ portion of git. Rebasing What">
+  
+    <link rel="alternate" href="/placeholder-blog/atom.xml" title="A Tech Blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/placeholder-blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/placeholder-blog/" id="logo">A Tech Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/placeholder-blog/">Home</a>
+        
+          <a class="main-nav-link" href="/placeholder-blog/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/placeholder-blog/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://harish1996.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Git-Branching-3" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/placeholder-blog/2018/05/27/Git-Branching-3/" class="article-date">
+  <time datetime="2018-05-27T05:27:52.000Z" itemprop="datePublished">2018-05-27</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Git-Branching-3
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Git-Branching-III-Rebasing"><a href="#Git-Branching-III-Rebasing" class="headerlink" title="Git : Branching III : Rebasing"></a>Git : Branching III : Rebasing</h1><p>In the previous blog, we saw about moving around branches and merging two branches. This time around we are going to explore a more ‘feared’ portion of git. Rebasing</p>
+<h2 id="What-is-Rebasing"><a href="#What-is-Rebasing" class="headerlink" title="What is Rebasing ?"></a>What is Rebasing ?</h2><p>‘git rebase’ is a complex tool in git which can be used to perform various operations such as editing commits, reforming commits , changing commit order etc. But on a more specific note , rebasing is the operation by which the structure of a commit tree can be changed.</p>
+<p>The most basic rebase command is syncing commits between an upstream branch and the current branch. ( An upstream is a branch/repository from which the current branch/repository is forked/branched from ! ).</p>
+<p>Consider the tree,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">* ad9631e (HEAD -&gt; bugfix) commit 13</span><br><span class="line">* ebc508e commit 12</span><br><span class="line">| * 6405f66 (new_feature) commit 11</span><br><span class="line">| * 4cf8fe7 commit 10</span><br><span class="line">|/  </span><br><span class="line">* 0e180e8 commit 9</span><br><span class="line">* 79d8019 commit 8</span><br><span class="line">* 75d11f0 commit 7</span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure>
+<p>There is this important bugfix that is happening from the master branch. But concurrently your team is working on a feature that would only be useful when the bug is fixed. So your team has branched from your bugfix branch to create a new feature branch. But still.. your bugfix is not over so you are pushing commits to the bugfix branch.</p>
+<p>One of the branch features is that, once diverged the commits of one branch dont affect another. So whatever bugfix that has happened will not be available in the new_feature branch. But inorder to test the new feature, the updates to the bugfix is badly needed. What will you do in this situation ? </p>
+<p>One way of handling this situation is to generate a patch between commits ad9631 and 0e180e8 and apply it on the new feature branch. But applying patches are often messy.Applying the patch takes the bugfix commits above the commits done in feature branch, which is logically confusing and wrong sometimes. Doing this will involve taking patches of both the branches , reverting all commits of this branch , applying the bugfix patches and applying the features patch. The most direct way to acheive this is to use ‘git rebase’.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase bugfix new_feature</span><br><span class="line">First, rewinding head to replay your work on top of it...</span><br><span class="line">Applying: commit 10</span><br><span class="line">Applying: commit 11</span><br><span class="line">$ git log --oneline --decorate --graph --all</span><br><span class="line">* eb502f2 (HEAD -&gt; new_feature) commit 11</span><br><span class="line">* 117f043 commit 10</span><br><span class="line">* ad9631e (bugfix) commit 13</span><br><span class="line">* ebc508e commit 12</span><br><span class="line">* 0e180e8 commit 9</span><br><span class="line">* 79d8019 commit 8</span><br><span class="line">* 75d11f0 commit 7</span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure>
+<p>Once we use rebase, the first line indicates that <code>First, rewinding head to replay your work on top of it...</code>. This indicates that commit10 and commit11 of the feature branch were reverted first , then commits 12,13 were applied. Then it is also shown that commits 10,11 were reapplied. So all of that in one command . Now the tree for new feature is in sync with bugfix.</p>
+<h2 id="Rebase-vs-merge"><a href="#Rebase-vs-merge" class="headerlink" title="Rebase vs merge"></a>Rebase vs merge</h2><p>Merging and rebasing sounds similar now .. Doesnt it ? But a merge updates the upstream , whereas a rebase updates the downstream. i.e. a Merge pushes changes from the current branch to the genesis branch , whereas a rebase pulls updates from the genesis branch to the current branch.</p>
+<p>Also a merge tries to connect the 2 branches with a seperate commit, which ensures that the commit information need not be disturbed in any way. But when doing a rebase, Git tries to change the parent of certain commits unlike a merge, where the sequence is maintained. When changing anything related to a commit, the commit SHA changes which essentially means that it creates a new commit with the new  information.</p>
+<p>This is exactly why rebasing is considered dangerous as they completely change commit information and when done carelessly can cause loss of data</p>
+<p>Rebases help us avoid complex branching and the need for merge commits. But rebasing can make a complex git tree disfunctional. Another problem with changing commit IDs is when using shared repositories or when using remote repos. During such operations , rebase must be used very carefully , because a badly done rebase breaks others code.</p>
+<p>Consider this repo<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ gl</span><br><span class="line">* 24bab9f (HEAD -&gt; bugfix2_bugfix) commit18</span><br><span class="line">* 3869b21 commit17</span><br><span class="line">| * 078300e (bugfix2) commit16</span><br><span class="line">|/  </span><br><span class="line">* f58bf7b commit15</span><br><span class="line">* 589eacd commit14</span><br><span class="line">| * eb502f2 (new_feature) commit 11</span><br><span class="line">| * 117f043 commit 10</span><br><span class="line">| * ad9631e (bugfix) commit 13</span><br><span class="line">| * ebc508e commit 12</span><br><span class="line">| * 0e180e8 commit 9</span><br><span class="line">| * 79d8019 commit 8</span><br><span class="line">| * 75d11f0 commit 7</span><br><span class="line">|/  </span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure></p>
+<p>If we try to rebase bugfix2 and bugfix .. What we may expect is that commits 7,8,9,12,13 be applied first before commits 14,15,16. But this is what happens when we try that.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase bugfix bugfix2</span><br><span class="line">First, rewinding head to replay your work on top of it...</span><br><span class="line">$ gl</span><br><span class="line">* 24bab9f (bugfix2_bugfix) commit18</span><br><span class="line">* 3869b21 commit17</span><br><span class="line">* f58bf7b commit15</span><br><span class="line">* 589eacd commit14</span><br><span class="line">| * eb502f2 (new_feature) commit 11</span><br><span class="line">| * 117f043 commit 10</span><br><span class="line">| * ad9631e (HEAD -&gt; bugfix2, bugfix) commit 13</span><br><span class="line">| * ebc508e commit 12</span><br><span class="line">| * 0e180e8 commit 9</span><br><span class="line">| * 79d8019 commit 8</span><br><span class="line">| * 75d11f0 commit 7</span><br><span class="line">|/  </span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure>
+<p>It is different from what we might expect. And also , even if we had gotten the state that we desired, bugfix2_bugfix would have remained floating, because if SHA of commit15 changes for bugfix2 , the bugfix2_bugfix branch would have had an invalid commit as its parent and would have resulted in an ambiguous state. There are a lot of troubles while using rebasing like these. Let us look at them in future articles.</p>
+<h1 id="Next"><a href="#Next" class="headerlink" title="Next ?"></a>Next ?</h1><p>Having seen rebasing and merging, we have seen how to integrate changes from a different branches. But there are bound to be some problems with this. One of them is Merge Conflicts. Let us discuss about them in our next article.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://harish1996.github.io/2018/05/27/Git-Branching-3/" data-id="cjhp70iu50000fmc63ncecit2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/placeholder-blog/2018/05/19/Git-Branching-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Git: Branching 2</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/placeholder-blog/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/placeholder-blog/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/placeholder-blog/2018/05/27/Git-Branching-3/">Git-Branching-3</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/05/19/Git-Branching-2/">Git: Branching 2</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/29/Git-Damage-Correction/">Git: Recalibrating</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/28/Git-Branching/">Git: Branching</a>
+          </li>
+        
+          <li>
+            <a href="/placeholder-blog/2018/04/21/Git-Undoing/">Git: Undoing</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 Harish Ganesan<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/placeholder-blog/" class="mobile-nav-link">Home</a>
+  
+    <a href="/placeholder-blog/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/placeholder-blog/fancybox/jquery.fancybox.css">
+  <script src="/placeholder-blog/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/placeholder-blog/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
