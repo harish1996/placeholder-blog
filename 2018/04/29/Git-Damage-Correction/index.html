@@ -99,14 +99,14 @@
 <p>Git assigns a checksum for every version of every file. It also assigns a checksum for every tree . A tree is an object which holds the checksum of all the files in a folder. Git also assigns a checksum to every commit.</p>
 <p>A command called <code>git cat-file</code> is helpful to read git objects be it a version of a file ( called blobs ) , a tree or commits</p>
 <p>When we read the details of the commit checksum mentioned in the log , here is what we get..</p>
-<p>new_repo$ git cat-file -p b4798cb<br>tree 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>parent 71764ed6cfb9006ce889a2842f5236ad7b5d3b6c<br>author harish1996 <a href="mailto:&#104;&#x61;&#x72;&#105;&#115;&#104;&#103;&#x61;&#110;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;" target="_blank" rel="noopener">&#104;&#x61;&#x72;&#105;&#115;&#104;&#103;&#x61;&#110;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a> 1524984326 +0530<br>committer harish1996 <a href="mailto:&#104;&#x61;&#x72;&#x69;&#115;&#104;&#103;&#x61;&#110;&#x65;&#x73;&#x61;&#x6e;&#x39;&#x36;&#64;&#103;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#x61;&#x72;&#x69;&#115;&#104;&#103;&#x61;&#110;&#x65;&#x73;&#x61;&#x6e;&#x39;&#x36;&#64;&#103;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a> 1524984326 +0530</p>
+<p>new_repo$ git cat-file -p b4798cb<br>tree 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>parent 71764ed6cfb9006ce889a2842f5236ad7b5d3b6c<br>author harish1996 <a href="mailto:&#104;&#x61;&#114;&#x69;&#x73;&#104;&#x67;&#x61;&#x6e;&#x65;&#115;&#97;&#110;&#x39;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#x61;&#114;&#x69;&#x73;&#104;&#x67;&#x61;&#x6e;&#x65;&#115;&#97;&#110;&#x39;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a> 1524984326 +0530<br>committer harish1996 <a href="mailto:&#104;&#97;&#x72;&#105;&#115;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x72;&#105;&#115;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a> 1524984326 +0530</p>
 <p>Fourth commit</p>
 <p>Each commit assigns a tree to itself . Also it assigns parent(s) to every commit. Also every commit has some metadeta related to commits.</p>
 <p>new_repo$ git cat-file -p 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>040000 tree e5cba352c904d0b512dba1ac6329e78d4cca3af5    another_folder<br>100644 blob 04591727d3423f9ab78a59031463039bc00bcd97    file<br>100644 blob 476ebfc61574a7c67895974a8da3b5bd5f744518    file2</p>
 <p>If we read the contents of tree. We can find out that a particular tree consists of other trees and blobs related to a particular version of the working directory. The tree in this tree object is a subtree which corresponds to a subfolder in a folder.</p>
 <p>new_repo$ git cat-file -p 04591727d3423f9ab78a59031463039bc00bcd97<br>afjkasfhjfkhdsfjksdfgdshello its me!!</p>
 <p>On reading one of the blob. We can find that the blob contains the entire file as is . But in a previous commit where the file named ‘file’ has different contents. In that case, the tree directs to a different blob which has the version of the file</p>
-<p>new_repo$ git cat-file -p d6ed37b<br>tree ab40298f83e3164254389e66d10ad4808e3fe6e5<br>author harish1996 <a href="mailto:&#104;&#x61;&#x72;&#x69;&#x73;&#104;&#x67;&#97;&#x6e;&#101;&#x73;&#x61;&#x6e;&#57;&#54;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#x61;&#x72;&#x69;&#x73;&#104;&#x67;&#97;&#x6e;&#101;&#x73;&#x61;&#x6e;&#57;&#54;&#64;&#x67;&#109;&#x61;&#105;&#108;&#46;&#99;&#x6f;&#x6d;</a> 1524982942 +0530<br>committer harish1996 <a href="mailto:&#x68;&#97;&#114;&#105;&#115;&#104;&#103;&#97;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;" target="_blank" rel="noopener">&#x68;&#97;&#114;&#105;&#115;&#104;&#103;&#97;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#108;&#46;&#x63;&#111;&#109;</a> 1524982942 +0530</p>
+<p>new_repo$ git cat-file -p d6ed37b<br>tree ab40298f83e3164254389e66d10ad4808e3fe6e5<br>author harish1996 <a href="mailto:&#104;&#97;&#114;&#105;&#115;&#x68;&#x67;&#x61;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#104;&#97;&#114;&#105;&#115;&#x68;&#x67;&#x61;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a> 1524982942 +0530<br>committer harish1996 <a href="mailto:&#x68;&#x61;&#114;&#105;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#57;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#114;&#105;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#57;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a> 1524982942 +0530</p>
 <p>first file</p>
 <p>new_repo$ git cat-file -p ab40298f83e3164254389e66d10ad4808e3fe6e5<br>100644 blob 9a2d30c5e58145728cad8f9c4661646f1bd74cc9    file</p>
 <p>new_repo$ git cat-file -p 9a2d30c5e58145728cad8f9c4661646f1bd74cc9<br>afjkasfhjfkhdsfjksdfgds</p>
@@ -117,7 +117,7 @@
 <p>The remarkable fact about git is eventhough it saves each and every version of the working directory. The filesizes of the files are very different.Git tries to compress files. For files used for programming, compression works well.</p>
 <p>new_repo$ ls -l file3<br>-rw-rw-r– 1 harish harish 904 Apr 29 13:11 file3</p>
 <p>new_repo$ git log –oneline<br>f6338e0 Sixth commit<br>5c0595d fifth file<br>b4798cb Fourth commit<br>71764ed fajfgj<br>677358d second file<br>d6ed37b first file</p>
-<p>new_repo$ gc f6338e0<br>tree a123e35fb541a9e06a6c17e6a94c9225e09de483<br>parent 5c0595dd537a82d656b3ff81b379fcb6b895c3bc<br>author harish1996 <a href="mailto:&#104;&#97;&#114;&#x69;&#x73;&#104;&#x67;&#97;&#110;&#101;&#x73;&#x61;&#x6e;&#x39;&#54;&#64;&#103;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#114;&#x69;&#x73;&#104;&#x67;&#97;&#110;&#101;&#x73;&#x61;&#x6e;&#x39;&#54;&#64;&#103;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a> 1524987694 +0530<br>committer harish1996 <a href="mailto:&#x68;&#97;&#114;&#x69;&#x73;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;" target="_blank" rel="noopener">&#x68;&#97;&#114;&#x69;&#x73;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#105;&#x6c;&#x2e;&#99;&#111;&#x6d;</a> 1524987694 +0530</p>
+<p>new_repo$ gc f6338e0<br>tree a123e35fb541a9e06a6c17e6a94c9225e09de483<br>parent 5c0595dd537a82d656b3ff81b379fcb6b895c3bc<br>author harish1996 <a href="mailto:&#104;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a> 1524987694 +0530<br>committer harish1996 <a href="mailto:&#x68;&#x61;&#x72;&#105;&#115;&#x68;&#x67;&#97;&#110;&#101;&#115;&#97;&#110;&#x39;&#54;&#x40;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#x72;&#105;&#115;&#x68;&#x67;&#97;&#110;&#101;&#115;&#97;&#110;&#x39;&#54;&#x40;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a> 1524987694 +0530</p>
 <p>Sixth commit</p>
 <p>new_repo$ gc a123e35fb541a9e06a6c17e6a94c9225e09de483<br>040000 tree e5cba352c904d0b512dba1ac6329e78d4cca3af5    another_folder<br>100644 blob 788bb3a9c950dda038f93202985130a3e91d1f57    file<br>100644 blob 476ebfc61574a7c67895974a8da3b5bd5f744518    file2<br>100644 blob fc3cdf997028034ceab14b7f2013425de2c098da    file3</p>
 <p>new_repo$ ls -l .git/objects/fc/3cdf997028034ceab14b7f2013425de2c098da<br>-r–r–r– 1 harish harish 362 Apr 29 13:11 .git/objects/fc/3cdf997028034ceab14b7f2013425de2c098da</p>
@@ -127,7 +127,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/29/Git-Damage-Correction/" data-id="cjhyip9hf00041oc6pnnbtsec" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/29/Git-Damage-Correction/" data-id="cji8pl9d90008v3c65g2csl1o" class="article-share-link">Share</a>
       
       
     </footer>
@@ -185,6 +185,10 @@
       <ul>
         
           <li>
+            <a href="/placeholder-blog/2018/06/10/Git-Interactive-Rebasing/">Git- Interactive Rebasing</a>
+          </li>
+        
+          <li>
             <a href="/placeholder-blog/2018/06/03/Git-Merge-Conflicts/">Git-Merge-Conflicts</a>
           </li>
         
@@ -198,10 +202,6 @@
         
           <li>
             <a href="/placeholder-blog/2018/04/29/Git-Damage-Correction/">Git: Recalibrating</a>
-          </li>
-        
-          <li>
-            <a href="/placeholder-blog/2018/04/28/Git-Branching/">Git: Branching</a>
           </li>
         
       </ul>
