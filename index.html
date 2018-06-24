@@ -63,6 +63,104 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Git-Interactive-Rebasing-2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/placeholder-blog/2018/06/24/Git-Interactive-Rebasing-2/" class="article-date">
+  <time datetime="2018-06-24T13:18:06.000Z" itemprop="datePublished">2018-06-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/placeholder-blog/2018/06/24/Git-Interactive-Rebasing-2/">Git-Interactive-Rebasing-2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Adding on the things we saw in the last article, let us look at an example with an unwantedly complicated repository as usual.</p>
+<p>As usual the tree of the repository is</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">*   fd45d7b (HEAD -&gt; bugfix) merged...</span><br><span class="line">|\  </span><br><span class="line">| * 86f0dc2 (bugfix2) changed line 4</span><br><span class="line">* | 21a556e changed line 4</span><br><span class="line">|/  </span><br><span class="line">*   88d5446 Merge branch &apos;bugfix2&apos; into bugfix</span><br><span class="line">|\  </span><br><span class="line">| * 57658fe added line 3</span><br><span class="line">* | 621d9f9 added line 4</span><br><span class="line">|/  </span><br><span class="line">*   7b9cd5e merged</span><br><span class="line">|\  </span><br><span class="line">| * aa43a83 added 1 line</span><br><span class="line">* | 00f07af added 2 lines</span><br><span class="line">|/  </span><br><span class="line">* ad9631e commit 13</span><br><span class="line">* ebc508e commit 12</span><br><span class="line">* 0e180e8 commit 9</span><br><span class="line">* 79d8019 commit 8</span><br><span class="line">* 75d11f0 commit 7</span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure>
+<p>Let us try all of the options that we saw in the previous article during an interactive rebase.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase -i 0e180e8</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">pick ebc508e commit 12</span><br><span class="line">reword ad9631e commit 13</span><br><span class="line">edit 00f07af added 2 lines</span><br><span class="line">squash aa43a83 added 1 line</span><br><span class="line">fixup 621d9f9 added line 4</span><br><span class="line">exec git log --oneline --graph --decorate</span><br><span class="line">drop 57658fe added line 3</span><br><span class="line">pick 21a556e changed line 4</span><br><span class="line">pick 86f0dc2 changed line 4</span><br></pre></td></tr></table></figure>
+<p>So let us go through what we expect from this ,</p>
+<ul>
+<li>pick ebc508e commit 12<br>  This line does not change anything, it picks the commit as is. So no worries</li>
+<li>reword ad9631e commit 13<br>  This line tells git to stop for changing the commit message. So it should provide an interface to change the commit message</li>
+<li>edit 00f07af added 2 lines<br>  This line tells git to stop for editing the commit.</li>
+<li>squash aa43a83 added 1 line<br>  We saw what squashing a commit is ! This should tell git to merge this commit’s changes with the previous commit.</li>
+<li>fixup 621d9f9 added line 4<br>  Similar to squashing , let us see what different happens..</li>
+<li>exec git log –oneline –graph –decorate<br>  This line should print the graph at that particular instant and move on</li>
+<li>drop 57658fe added line 3<br>  This commit will be removed.</li>
+</ul>
+<p>So lets get ready to see what happens, when we try this. ( Save and exitting vim after changing those lines )</p>
+<p>Immediately after i save and exit, git starts processing all the requests from the top.</p>
+<ul>
+<li><p>Pick happens in an instant without even giving us time to notice that ( mostly ).</p>
+</li>
+<li><p>Git now stops for reword and opens up an editor ( in my case vim ).<br><image1></image1></p>
+<reworded and="" saved="">
+</reworded></li>
+<li><p>After the previous step, as we expected git processes the edit line now and shows these messages now.</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[detached HEAD 7600aba] commit 13 ___ renamed</span><br><span class="line"> Date: Sun May 27 12:25:42 2018 +0530</span><br><span class="line"> 1 file changed, 0 insertions(+), 0 deletions(-)</span><br><span class="line"> create mode 100644 file10</span><br><span class="line">Stopped at 00f07afc1f72421bf6c98293813d57509b5b3744... added 2 lines</span><br><span class="line">You can amend the commit now, with</span><br><span class="line"></span><br><span class="line">	git commit --amend </span><br><span class="line"></span><br><span class="line">Once you are satisfied with your changes, run</span><br><span class="line"></span><br><span class="line">	git rebase --continue</span><br></pre></td></tr></table></figure>
+<p>The first 4 output lines are for reword operation ( previous one ). The lines that follow are for editing the commit. As we see, edit can not only change the message but can also be used to change the contents of the commit. We can even add additional commits inbetween. Let me add a file and amend this commit and also add a new commit inbetween , just to see what are the possibilities. :P</p>
+<p>On doing these<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ touch file11</span><br><span class="line">$ git commit --amend</span><br></pre></td></tr></table></figure></p>
+<amended message="">
+
+<p>Further let us add a commit<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ touch file12</span><br><span class="line">$ git add file12</span><br><span class="line">$ git commit -m &quot;on the middle commit&quot;</span><br><span class="line">[detached HEAD 75b9697] on the middle commit</span><br><span class="line"> 1 file changed, 0 insertions(+), 0 deletions(-)</span><br><span class="line"> create mode 100644 file12</span><br></pre></td></tr></table></figure></p>
+<p>So after tampering/changing the repository to our heart’s content, when we decide to stop the editing we should do what git said us when it stopped for editing.. “Once you are satisfied with your changes, run git rebase –continue” . So lets do that.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase --continue</span><br><span class="line">error: could not apply aa43a83... added 1 line</span><br><span class="line"></span><br><span class="line">When you have resolved this problem, run &quot;git rebase --continue&quot;.</span><br><span class="line">If you prefer to skip this patch, run &quot;git rebase --skip&quot; instead.</span><br><span class="line">To check out the original branch and stop rebasing, run &quot;git rebase --abort&quot;.</span><br><span class="line"></span><br><span class="line">Could not apply aa43a83b74d0d025efff8229481a3b09a9f7cc7e... added 1 line</span><br></pre></td></tr></table></figure>
+<p>Oh oh ! Something wrong happened … By reading we can understand that, git has completed the edit operation and now is stuck with squash operation somehow… Lets see what it is.. When some problem arises like this, our first tool should be <code>git mergetool</code> ( atleast mine ), because during rebase, it is normal for git to endup in a dilemma . So in those situations, git asks us to take control.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git mergetool</span><br><span class="line"></span><br><span class="line">This message is displayed because &apos;merge.tool&apos; is not configured.</span><br><span class="line">See &apos;git mergetool --tool-help&apos; or &apos;git help config&apos; for more details.</span><br><span class="line">&apos;git mergetool&apos; will now attempt to use one of the following tools:</span><br><span class="line">meld opendiff kdiff3 tkdiff xxdiff tortoisemerge gvimdiff diffuse diffmerge ecmerge p4merge araxis bc codecompare emerge vimdiff</span><br><span class="line">Merging:</span><br><span class="line">file6</span><br><span class="line"></span><br><span class="line">Normal merge conflict for &apos;file6&apos;:</span><br><span class="line">  &#123;local&#125;: modified file</span><br><span class="line">  &#123;remote&#125;: modified file</span><br><span class="line">Hit return to start merge resolution tool (meld):</span><br></pre></td></tr></table></figure>
+<meld image="">
+
+<p>The problem was commit to be squashed i.e. aa43a83 , has a different version of the file6 , so while squashing git got confused whether to use the file6 of 00f07af or from aa43a83 . As we as we solve this using mergetool , we can use git rebase –continue to proceed.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase --continue</span><br></pre></td></tr></table></figure>
+<p>So now squash takes control …</p>
+<squash image="">
+
+<p>We can choose to modify it or leave it alone.. I am going to change it..</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase --continue</span><br><span class="line">[detached HEAD ec8e633] squashing.... on the middle commit|----|added 1 line</span><br><span class="line"> Date: Sun Jun 24 19:48:52 2018 +0530</span><br><span class="line"> 2 files changed, 2 deletions(-)</span><br><span class="line"> create mode 100644 file12</span><br><span class="line"></span><br><span class="line">error: could not apply 621d9f9... added line 4</span><br><span class="line"></span><br><span class="line">When you have resolved this problem, run &quot;git rebase --continue&quot;.</span><br><span class="line">If you prefer to skip this patch, run &quot;git rebase --skip&quot; instead.</span><br><span class="line">To check out the original branch and stop rebasing, run &quot;git rebase --abort&quot;.</span><br><span class="line"></span><br><span class="line">Could not apply 621d9f9365ab058022495da4640baad2009a8571... added line 4</span><br></pre></td></tr></table></figure>
+<p>Next comes fixup.. Again a conflict :(</p>
+<p>The same way i am going to solve it through git mergetool…</p>
+<p>After , ‘git rebase –continue’</p>
+<commit message="" image="">
+
+<p>Now , what is the difference ? During squash, it showed us both the messages uncommented.. But now it has only the first one uncommented, while the other messages are commented. So based on the requirement, we can use these.. I am not going to alter this time..</p>
+<p>After saving,</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase --continue</span><br><span class="line">[detached HEAD dbb3365] squashing.... on the middle commit|----|added 1 line</span><br><span class="line"> Date: Sun Jun 24 19:48:52 2018 +0530</span><br><span class="line"> 2 files changed, 2 insertions(+), 1 deletion(-)</span><br><span class="line"> create mode 100644 file12</span><br><span class="line">Executing: git log --oneline --graph --decorate</span><br><span class="line">* dbb3365 (HEAD) squashing.... on the middle commit|----|added 1 line</span><br><span class="line">* 417745f added 2 lines</span><br><span class="line">* 7600aba commit 13 ___ renamed</span><br><span class="line">* ebc508e commit 12</span><br><span class="line">* 0e180e8 commit 9</span><br><span class="line">* 79d8019 commit 8</span><br><span class="line">* 75d11f0 commit 7</span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br><span class="line">error: could not apply 86f0dc2... changed line 4</span><br><span class="line"></span><br><span class="line">When you have resolved this problem, run &quot;git rebase --continue&quot;.</span><br><span class="line">If you prefer to skip this patch, run &quot;git rebase --skip&quot; instead.</span><br><span class="line">To check out the original branch and stop rebasing, run &quot;git rebase --abort&quot;.</span><br><span class="line">Could not apply 86f0dc2ed82ab8f6568f190890ed69af293baabd... changed line 4</span><br></pre></td></tr></table></figure>
+<p>So fixup worked… Next in line is exec… </p>
+<p>exec should execute ‘git log –oneline –graph –decorate’. Well it happened.. And then drop … It happened ( where is the message ?? )..<br>And yet another conflict…</p>
+<p>As we solve the conflict yet another time, git converts pick into edit as we can see here.. It asks for a new message for the commit now</p>
+<pick message="">
+
+<p>As we save this… All good now… :) . Git finished the other “pick”s and successfully completed this rebase..</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">$ git rebase --continue</span><br><span class="line">[detached HEAD f1c2315] changed line 4</span><br><span class="line"> 1 file changed, 2 insertions(+), 2 deletions(-)</span><br><span class="line">Successfully rebased and updated refs/heads/bugfix.</span><br><span class="line">$ gl</span><br><span class="line">* f1c2315 (HEAD -&gt; bugfix) changed line 4</span><br><span class="line">* 88a195f changed line 4</span><br><span class="line">* dbb3365 squashing.... on the middle commit|----|added 1 line</span><br><span class="line">* 417745f added 2 lines</span><br><span class="line">* 7600aba commit 13 ___ renamed</span><br><span class="line">* ebc508e commit 12</span><br><span class="line">* 0e180e8 commit 9</span><br><span class="line">* 79d8019 commit 8</span><br><span class="line">* 75d11f0 commit 7</span><br><span class="line">* f6338e0 (master) Sixth commit</span><br><span class="line">* 5c0595d fifth file</span><br><span class="line">* b4798cb Fourth commit</span><br><span class="line">* 71764ed fajfgj</span><br><span class="line">* 677358d second file</span><br><span class="line">* d6ed37b first file</span><br></pre></td></tr></table></figure>
+<p>Now as we can see the tree has completely changed…it has straightened out with the changes that we made. Although it is one of the biggest dangers of git rebase , because any branch diverging from this branch will forever lose its reference and it cant be merged into this branch again . This is one of the problems of using rebase aggressively. We will discuss more problems in future posts. ‘git rebase’ can be used effectively inorder to maintain a straight and clean commit structure.</p>
+<h2 id="Moving-on"><a href="#Moving-on" class="headerlink" title="Moving on"></a>Moving on</h2><p>In the future article, let us move on to the dangers of rebase and how not to use rebase in a shared repository. </p>
+</pick></commit></squash></meld></amended>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://harish1996.github.io/2018/06/24/Git-Interactive-Rebasing-2/" data-id="cjisyiu8i000249c6rcsb96fd" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Git-Interactive-Rebasing" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/placeholder-blog/2018/06/10/Git-Interactive-Rebasing/" class="article-date">
@@ -115,7 +213,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/06/10/Git-Interactive-Rebasing/" data-id="cji8pl9ca0002v3c678v5m5t1" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/06/10/Git-Interactive-Rebasing/" data-id="cjisyiu8p000349c61lxt1b9n" class="article-share-link">Share</a>
       
       
     </footer>
@@ -186,7 +284,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/06/03/Git-Merge-Conflicts/" data-id="cji8pl9ch0003v3c6a3lafubw" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/06/03/Git-Merge-Conflicts/" data-id="cjisyiu8v000449c6sf0jhke3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -241,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/05/27/Git-Branching-3/" data-id="cji8pl9c10001v3c6kyd1tz28" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/05/27/Git-Branching-3/" data-id="cjisyiu7o000049c6tebrjv3j" class="article-share-link">Share</a>
       
       
     </footer>
@@ -298,7 +396,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/05/19/Git-Branching-2/" data-id="cji8pl9cn0004v3c650nny3e0" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/05/19/Git-Branching-2/" data-id="cjisyiu89000149c6smyjaoty" class="article-share-link">Share</a>
       
       
     </footer>
@@ -342,14 +440,14 @@
 <p>Git assigns a checksum for every version of every file. It also assigns a checksum for every tree . A tree is an object which holds the checksum of all the files in a folder. Git also assigns a checksum to every commit.</p>
 <p>A command called <code>git cat-file</code> is helpful to read git objects be it a version of a file ( called blobs ) , a tree or commits</p>
 <p>When we read the details of the commit checksum mentioned in the log , here is what we get..</p>
-<p>new_repo$ git cat-file -p b4798cb<br>tree 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>parent 71764ed6cfb9006ce889a2842f5236ad7b5d3b6c<br>author harish1996 <a href="mailto:&#104;&#x61;&#114;&#x69;&#x73;&#104;&#x67;&#x61;&#x6e;&#x65;&#115;&#97;&#110;&#x39;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#x61;&#114;&#x69;&#x73;&#104;&#x67;&#x61;&#x6e;&#x65;&#115;&#97;&#110;&#x39;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a> 1524984326 +0530<br>committer harish1996 <a href="mailto:&#104;&#97;&#x72;&#105;&#115;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x72;&#105;&#115;&#104;&#103;&#x61;&#x6e;&#x65;&#x73;&#97;&#110;&#x39;&#x36;&#x40;&#x67;&#109;&#x61;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a> 1524984326 +0530</p>
+<p>new_repo$ git cat-file -p b4798cb<br>tree 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>parent 71764ed6cfb9006ce889a2842f5236ad7b5d3b6c<br>author harish1996 <a href="mailto:&#104;&#97;&#x72;&#105;&#x73;&#104;&#x67;&#x61;&#110;&#x65;&#x73;&#x61;&#x6e;&#57;&#x36;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x72;&#105;&#x73;&#104;&#x67;&#x61;&#110;&#x65;&#x73;&#x61;&#x6e;&#57;&#x36;&#64;&#x67;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a> 1524984326 +0530<br>committer harish1996 <a href="mailto:&#x68;&#x61;&#x72;&#105;&#115;&#104;&#x67;&#x61;&#110;&#x65;&#x73;&#97;&#x6e;&#57;&#x36;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#x72;&#105;&#115;&#104;&#x67;&#x61;&#110;&#x65;&#x73;&#97;&#x6e;&#57;&#x36;&#x40;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#111;&#x6d;</a> 1524984326 +0530</p>
 <p>Fourth commit</p>
 <p>Each commit assigns a tree to itself . Also it assigns parent(s) to every commit. Also every commit has some metadeta related to commits.</p>
 <p>new_repo$ git cat-file -p 529d516426af9681a7ae009d48c7ddba8a8dd88a<br>040000 tree e5cba352c904d0b512dba1ac6329e78d4cca3af5    another_folder<br>100644 blob 04591727d3423f9ab78a59031463039bc00bcd97    file<br>100644 blob 476ebfc61574a7c67895974a8da3b5bd5f744518    file2</p>
 <p>If we read the contents of tree. We can find out that a particular tree consists of other trees and blobs related to a particular version of the working directory. The tree in this tree object is a subtree which corresponds to a subfolder in a folder.</p>
 <p>new_repo$ git cat-file -p 04591727d3423f9ab78a59031463039bc00bcd97<br>afjkasfhjfkhdsfjksdfgdshello its me!!</p>
 <p>On reading one of the blob. We can find that the blob contains the entire file as is . But in a previous commit where the file named ‘file’ has different contents. In that case, the tree directs to a different blob which has the version of the file</p>
-<p>new_repo$ git cat-file -p d6ed37b<br>tree ab40298f83e3164254389e66d10ad4808e3fe6e5<br>author harish1996 <a href="mailto:&#104;&#97;&#114;&#105;&#115;&#x68;&#x67;&#x61;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;" target="_blank" rel="noopener">&#104;&#97;&#114;&#105;&#115;&#x68;&#x67;&#x61;&#x6e;&#101;&#115;&#97;&#110;&#x39;&#x36;&#64;&#x67;&#109;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#109;</a> 1524982942 +0530<br>committer harish1996 <a href="mailto:&#x68;&#x61;&#114;&#105;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#57;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#114;&#105;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#57;&#54;&#64;&#103;&#x6d;&#97;&#105;&#x6c;&#x2e;&#x63;&#x6f;&#x6d;</a> 1524982942 +0530</p>
+<p>new_repo$ git cat-file -p d6ed37b<br>tree ab40298f83e3164254389e66d10ad4808e3fe6e5<br>author harish1996 <a href="mailto:&#104;&#x61;&#x72;&#x69;&#115;&#104;&#x67;&#97;&#x6e;&#x65;&#115;&#97;&#110;&#57;&#x36;&#64;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;" target="_blank" rel="noopener">&#104;&#x61;&#x72;&#x69;&#115;&#104;&#x67;&#97;&#x6e;&#x65;&#115;&#97;&#110;&#57;&#x36;&#64;&#103;&#109;&#x61;&#x69;&#x6c;&#x2e;&#99;&#111;&#109;</a> 1524982942 +0530<br>committer harish1996 <a href="mailto:&#x68;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#110;&#101;&#x73;&#97;&#x6e;&#57;&#x36;&#x40;&#103;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;" target="_blank" rel="noopener">&#x68;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#110;&#101;&#x73;&#97;&#x6e;&#57;&#x36;&#x40;&#103;&#109;&#x61;&#105;&#108;&#x2e;&#99;&#111;&#109;</a> 1524982942 +0530</p>
 <p>first file</p>
 <p>new_repo$ git cat-file -p ab40298f83e3164254389e66d10ad4808e3fe6e5<br>100644 blob 9a2d30c5e58145728cad8f9c4661646f1bd74cc9    file</p>
 <p>new_repo$ git cat-file -p 9a2d30c5e58145728cad8f9c4661646f1bd74cc9<br>afjkasfhjfkhdsfjksdfgds</p>
@@ -360,7 +458,7 @@
 <p>The remarkable fact about git is eventhough it saves each and every version of the working directory. The filesizes of the files are very different.Git tries to compress files. For files used for programming, compression works well.</p>
 <p>new_repo$ ls -l file3<br>-rw-rw-r– 1 harish harish 904 Apr 29 13:11 file3</p>
 <p>new_repo$ git log –oneline<br>f6338e0 Sixth commit<br>5c0595d fifth file<br>b4798cb Fourth commit<br>71764ed fajfgj<br>677358d second file<br>d6ed37b first file</p>
-<p>new_repo$ gc f6338e0<br>tree a123e35fb541a9e06a6c17e6a94c9225e09de483<br>parent 5c0595dd537a82d656b3ff81b379fcb6b895c3bc<br>author harish1996 <a href="mailto:&#104;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#104;&#97;&#x72;&#x69;&#x73;&#x68;&#103;&#97;&#x6e;&#x65;&#115;&#x61;&#x6e;&#x39;&#x36;&#64;&#x67;&#x6d;&#x61;&#x69;&#x6c;&#46;&#x63;&#111;&#x6d;</a> 1524987694 +0530<br>committer harish1996 <a href="mailto:&#x68;&#x61;&#x72;&#105;&#115;&#x68;&#x67;&#97;&#110;&#101;&#115;&#97;&#110;&#x39;&#54;&#x40;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;" target="_blank" rel="noopener">&#x68;&#x61;&#x72;&#105;&#115;&#x68;&#x67;&#97;&#110;&#101;&#115;&#97;&#110;&#x39;&#54;&#x40;&#103;&#x6d;&#x61;&#x69;&#x6c;&#46;&#99;&#111;&#x6d;</a> 1524987694 +0530</p>
+<p>new_repo$ gc f6338e0<br>tree a123e35fb541a9e06a6c17e6a94c9225e09de483<br>parent 5c0595dd537a82d656b3ff81b379fcb6b895c3bc<br>author harish1996 <a href="mailto:&#x68;&#x61;&#114;&#x69;&#115;&#x68;&#103;&#x61;&#110;&#101;&#115;&#x61;&#110;&#57;&#x36;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;" target="_blank" rel="noopener">&#x68;&#x61;&#114;&#x69;&#115;&#x68;&#103;&#x61;&#110;&#101;&#115;&#x61;&#110;&#57;&#x36;&#x40;&#x67;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#x63;&#x6f;&#109;</a> 1524987694 +0530<br>committer harish1996 <a href="mailto:&#x68;&#97;&#x72;&#x69;&#115;&#104;&#103;&#97;&#110;&#x65;&#x73;&#x61;&#x6e;&#x39;&#54;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;" target="_blank" rel="noopener">&#x68;&#97;&#x72;&#x69;&#115;&#104;&#103;&#97;&#110;&#x65;&#x73;&#x61;&#x6e;&#x39;&#54;&#x40;&#x67;&#109;&#97;&#105;&#x6c;&#46;&#x63;&#111;&#x6d;</a> 1524987694 +0530</p>
 <p>Sixth commit</p>
 <p>new_repo$ gc a123e35fb541a9e06a6c17e6a94c9225e09de483<br>040000 tree e5cba352c904d0b512dba1ac6329e78d4cca3af5    another_folder<br>100644 blob 788bb3a9c950dda038f93202985130a3e91d1f57    file<br>100644 blob 476ebfc61574a7c67895974a8da3b5bd5f744518    file2<br>100644 blob fc3cdf997028034ceab14b7f2013425de2c098da    file3</p>
 <p>new_repo$ ls -l .git/objects/fc/3cdf997028034ceab14b7f2013425de2c098da<br>-r–r–r– 1 harish harish 362 Apr 29 13:11 .git/objects/fc/3cdf997028034ceab14b7f2013425de2c098da</p>
@@ -370,7 +468,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/29/Git-Damage-Correction/" data-id="cji8pl9d90008v3c65g2csl1o" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/29/Git-Damage-Correction/" data-id="cjisyiu9p000949c6hgsmvotg" class="article-share-link">Share</a>
       
       
     </footer>
@@ -435,7 +533,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/28/Git-Branching/" data-id="cji8pl9cs0005v3c6lluzfalt" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/28/Git-Branching/" data-id="cjisyiu96000649c6l3zyg6do" class="article-share-link">Share</a>
       
       
     </footer>
@@ -476,7 +574,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/21/Git-Undoing/" data-id="cji8pl9cx0006v3c63jy5hn9i" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/21/Git-Undoing/" data-id="cjisyiu9d000749c6tuongtbn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -521,7 +619,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/21/hello-world/" data-id="cji8pl9d30007v3c6iphn9h9c" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/21/hello-world/" data-id="cjisyiu9i000849c680uk5o5t" class="article-share-link">Share</a>
       
       
     </footer>
@@ -558,7 +656,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://harish1996.github.io/2018/04/21/First/" data-id="cji8pl9bm0000v3c6pwnxeg0h" class="article-share-link">Share</a>
+      <a data-url="https://harish1996.github.io/2018/04/21/First/" data-id="cjisyiu90000549c6cgr6tmht" class="article-share-link">Share</a>
       
       
     </footer>
@@ -599,6 +697,10 @@
       <ul>
         
           <li>
+            <a href="/placeholder-blog/2018/06/24/Git-Interactive-Rebasing-2/">Git-Interactive-Rebasing-2</a>
+          </li>
+        
+          <li>
             <a href="/placeholder-blog/2018/06/10/Git-Interactive-Rebasing/">Git- Interactive Rebasing</a>
           </li>
         
@@ -612,10 +714,6 @@
         
           <li>
             <a href="/placeholder-blog/2018/05/19/Git-Branching-2/">Git: Branching 2</a>
-          </li>
-        
-          <li>
-            <a href="/placeholder-blog/2018/04/29/Git-Damage-Correction/">Git: Recalibrating</a>
           </li>
         
       </ul>
